@@ -12,4 +12,6 @@
 #  user_id    :integer
 #
 class Package < ApplicationRecord
+  validates(:name, { :presence => true })
+  validates(:arrive_on, { :presence => true })
 end

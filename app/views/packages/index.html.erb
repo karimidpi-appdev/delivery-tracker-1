@@ -1,7 +1,7 @@
 <div>
   <div>
     <h1>
-      List of all packages
+      Delivery Tracker
     </h1>
   </div>
 </div>
@@ -11,13 +11,13 @@
 <div>
   <div>
     <h2>
-      Add a new package
+      Expecting a package?
     </h2>
 
     <form action="/insert_package" method="post">
       <div>
         <label for="name_box">
-          Name
+          Description
         </label>
 
         <input type="text" id="name_box" name="query_name">
@@ -25,15 +25,15 @@
 
       <div>
         <label for="user_id_box">
-          User
+          
         </label>
 
-        <input type="text" id="user_id_box" name="query_user_id">
+        <input type="hidden" id="user_id_box" name="query_user_id">
       </div>
 
       <div>
         <label for="arrive_on_box">
-          Arrive on
+          Supposed to arrive on
         </label>
 
         <input type="date" id="arrive_on_box" name="query_arrive_on">
@@ -41,7 +41,7 @@
 
       <div>
         <label for="content_box">
-          Content
+          Details
         </label>
 
         <textarea id="content_box" name="query_content" rows="3"></textarea>
@@ -49,14 +49,14 @@
 
       <div>
         <label for="status_box">
-          Status
+        
         </label>
 
-        <input type="text" id="status_box" name="query_status">
+        <input type="hidden" id="status_box" name="query_status">
       </div>
 
       <button>
-        Create package
+        Log delivery
       </button>
     </form>
   </div>
@@ -64,87 +64,29 @@
 
 <hr>
 <div>
-  <div>
-    <table border="1">
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          Name
-        </th>
-
-        <th>
-          User
-        </th>
-
-        <th>
-          Arrive on
-        </th>
-
-        <th>
-          Content
-        </th>
-
-        <th>
-          Status
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_packages.each do |a_package| %>
-      <tr>
-        <td>
-          <%= a_package.id %>
-        </td>
-
-        <td>
-          <%= a_package.name %>
-        </td>
-
-        <td>
-          <%= a_package.user_id %>
-        </td>
-
-        <td>
-          <%= a_package.arrive_on %>
-        </td>
-
-        <td>
-          <%= a_package.content %>
-        </td>
-
-        <td>
-          <%= a_package.status %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_package.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_package.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/packages/<%= a_package.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
+  <div class="waiting_on">
+    <h2>Waiting on</h2>
+    <% @list_of_packages.each do |a_package| %>
+      <ul>
+        <li>
+          <div>
+            <%= a_package.name %>
+          </div>
+          <div>
+              Supposed to arrive on <%= a_package.arrive_on %>
+          </div>
+          <div>
+            <%= a_package.content %>
+          </div>
+          <div>
+            <form action="/modify_delivery/<%= a_package.id %>" method="post">
+              <input type="hidden" name="query_status" value="received">
+              <button>Mark as received</button>
+            </form>
+          </div>
+          <br>
+        </li>
+      </ul>
+    <% end %>  
   </div>
 </div>
-
-<hr>
