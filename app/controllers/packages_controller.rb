@@ -1,8 +1,12 @@
 class PackagesController < ApplicationController
   def index
-    matching_packages = Package.all
+    matching_packages = Package.where({ :user_id => session.fetch(:user_id) })
 
     @list_of_packages = matching_packages.order({ :created_at => :desc })
+
+    @waiting_list = matching_packages.where({ :status => "waiting_on"})
+
+    @received_list = matching_packages.where({ :status => "received"})
 
     render({ :template => "packages/index.html.erb" })
   end
@@ -38,16 +42,16 @@ class PackagesController < ApplicationController
     the_package = Package.where({ :id => the_id }).at(0)
 
     the_package.name = params.fetch("query_name")
-    the_package.user_id = params.fetch("query_user_id")
+    the_package.user_id = session.fetch(:user_id)
     the_package.arrive_on = params.fetch("query_arrive_on")
     the_package.content = params.fetch("query_content")
     the_package.status = params.fetch("query_status")
 
     if the_package.valid?
       the_package.save
-      redirect_to("/packages/#{the_package.id}", { :notice => "Package updated successfully."} )
+      redirect_to("/packages", { :notice => "Package updated successfully."} )
     else
-      redirect_to("/packages/#{the_package.id}", { :alert => the_package.errors.full_messages.to_sentence })
+      redirect_to("/packages", { :alert => the_package.errors.full_messages.to_sentence })
     end
   end
 

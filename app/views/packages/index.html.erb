@@ -29,7 +29,7 @@
           
         </label>
 
-        <input type="hidden" id="user_id_box" name="query_user_id">
+        <input type="hidden" id="user_id_box" name="query_user_id" value="<%= session.fetch(:user_id) %>">
       </div>
 
       <div>
@@ -53,7 +53,7 @@
         
         </label>
 
-        <input type="hidden" id="status_box" name="query_status">
+        <input type="hidden" id="status_box" name="query_status" value="waiting_on">
       </div>
 
       <button>
@@ -64,30 +64,51 @@
 </div>
 
 <hr>
-<div>
-  <div class="waiting_on" style="background: lightgoldenrodyellow">
-    <h2>Waiting on</h2>
-    <% @list_of_packages.each do |a_package| %>
-      <ul>
-        <li>
-          <div>
-            <%= a_package.name %>
-          </div>
-          <div>
-              Supposed to arrive on <%= a_package.arrive_on %>
-          </div>
-          <div>
-            <%= a_package.content %>
-          </div>
-          <div>
-            <form action="/modify_delivery/<%= a_package.id %>" method="post">
-              <input type="hidden" name="query_status" value="received">
-              <button>Mark as received</button>
-            </form>
-          </div>
-          <br>
-        </li>
-      </ul>
-    <% end %>  
-  </div>
+
+<div class="waiting_on" style="background: lightgoldenrodyellow">
+  <h2>Waiting on</h2>
+  <% @waiting_list.each do |a_package| %>
+    <ul>
+      <li>
+        <div>
+          <%= a_package.name %>
+        </div>
+        <div>
+            Supposed to arrive on <%= a_package.arrive_on %>
+        </div>
+        <div>
+          <%= a_package.content %>
+        </div>
+        <div>
+          <form action="/modify_package/<%= a_package.id %>" method="post">
+            <input type="hidden" name="query_name" value="<%= a_package.name %>">
+            <input type="hidden" name="query_user_id" value="<%= a_package.user_id %>">
+            <input type="hidden" name="query_arrive_on" value="<%= a_package.arrive_on %>">
+            <input type="hidden" name="query_content" value="<%= a_package.content %>">
+            <input type="hidden" name="query_status" value="received">
+            <button>Mark as received</button>
+          </form>
+        </div>
+        <br>
+      </li>
+    </ul>
+  <% end %>  
+</div>
+<div class="received" style="background: lightgreen">
+  <h2>Received</h2>
+  <% @received_list.each do |a_package| %>
+    <ul>
+      <li>
+        <div>
+          <%= a_package.name %>
+        </div>
+        <div>
+          <small>
+              Updated about <%= time_ago_in_words(a_package.updated_at) %> ago
+            <a href="/delete_package/<%= a_package.id %>">Delete</a>
+          </small>
+        </div>
+      </li>
+    </ul>
+  <% end %>
 </div>
