@@ -73,9 +73,16 @@
         <div>
           <%= a_package.name %>
         </div>
+        <% if ((Date.today) - ( a_package.arrive_on )) > 3 %>
+          <div style="color: red">
+              Supposed to arrive on
+              <%= a_package.arrive_on %>
+            </div>
+        <% else %>
         <div>
             Supposed to arrive on <%= a_package.arrive_on %>
         </div>
+        <% end %>
         <div>
           <%= a_package.content %>
         </div>
@@ -104,7 +111,7 @@
         </div>
         <div>
           <small>
-              Updated about <%= time_ago_in_words(a_package.updated_at) %> ago
+              Updated <%= time_ago_in_words(a_package.updated_at) %> ago
             <a href="/delete_package/<%= a_package.id %>">Delete</a>
           </small>
         </div>
